@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>HK2 - Binder | Luca Sepe</title>
+  <meta name="author" content="Luca Sepe">
+  <meta name="description" content="lorem ipsum">
+  <meta property="og:title" content="HK2 - Binder | Luca Sepe">
+  <meta property="og:url" content="http://lucasepe.github.io/2017/07/10/hk2-binder/">
+  <meta property="og:site_name" content="Luca Sepe">
+  <meta property="og:description" content="lorem ipsum">
+  <meta property="og:image" content="https://unsplash.it/2000/1200?image=1074">
+  <meta property="og:type" content="blog">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:description" content="lorem ipsum">
+  <meta name="twitter:title" content="HK2 - Binder | Luca Sepe">
+  <meta name="twitter:url" content="http://lucasepe.github.io/2017/07/10/hk2-binder/">
+  <meta name="twitter:site" content="Luca Sepe">
+  <meta name="twitter:creator" content="@lucasepe">
+  <meta name="twitter:domain" content="http://lucasepe.github.io">
+  <meta property="twitter:image" content="https://unsplash.it/2000/1200?image=1074">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Lora|Space+Mono:700">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
+  <link rel="stylesheet" href="/assets/css/main.css">
+
+  <link rel="alternate" type="application/rss+xml" title="Luca Sepe" href="http://lucasepe.github.io/feed.xml">
+  <link rel="canonical" href="http://lucasepe.github.io/2017/07/10/hk2-binder/">
+
+  
+</head>
+
+
+  <body>
+
+    <main>
+      <article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="section-padding--lg mast rellax" data-rellax-speed="-4">
+    <a class="nav nav--white" href="/">
+      <i class="fa fa-lg fa-arrow-left"></i>
+      <span>Back to Posts</span>
+    </a>
+    <figure class="absolute-bg mast__img" style="background-image: url('https://unsplash.it/2000/1200?image=1074');"></figure>
+    <div class="mast__container">
+      <span><time datetime="2017-07-10T00:00:00+02:00" itemprop="datePublished">Jul 10, 2017</time></span>
+      <h1 itemprop="name headline">HK2 - Binder</h1>
+      
+        <span>Posted in 
+          
+            <a class="nav--white" href="/category/hk2">HK2</a>, 
+          
+            <a class="nav--white" href="/category/java">Java</a>
+          
+        </span>
+      
+      <span></span>
+    </div>
+  </header>
+
+  <section class="section-padding bg-grey" itemprop="articleBody">
+    <!-- Place this tag where you want the button to render. -->
+    <div class="post">
+	<div class="g-plusone" data-size="tall" data-href="http://lucasepe.github.io/"></div>
+    </div>
+    <div class="post">
+      <h2 id="hk2-binder">HK2 Binder</h2>
+
+<p>The binder specifies how the dependency injection should create your classes.</p>
+
+<p>The binder is used in conjunction with the <code class="highlighter-rouge">ServiceLocatorUtilities.bind(ServiceLocator, Binder...)</code> method in order to add (or remove) services to a <code class="highlighter-rouge">ServiceLocator</code>.</p>
+
+<p>Usually you extend an <code class="highlighter-rouge">AbstractBinder</code>; a skeleton implementation of injection binder with convenience methods for binding definitions.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">ServiceLocatorUtilities</span><span class="o">.</span><span class="na">bind</span><span class="o">(</span><span class="n">locator</span><span class="o">,</span> <span class="k">new</span> <span class="n">AbstractBinder</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="n">configure</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">bind</span><span class="o">(</span><span class="n">MyService</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">to</span><span class="o">(</span><span class="n">MyService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>and this is how to inject:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OtherClass</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">MyService</span> <span class="n">myService</span><span class="o">;</span>
+
+    <span class="nd">@Inject</span>
+    <span class="kd">public</span> <span class="n">OtherClass</span><span class="o">(</span><span class="n">MyService</span> <span class="n">myService</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">myService</span> <span class="o">=</span> <span class="n">myService</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p><strong>What if I have an interface and an implementation?</strong></p>
+
+<p>It simply reads <code class="highlighter-rouge">bind( implementation ).to( contract )</code>. You can alternative chain <code class="highlighter-rouge">.in( scope )</code>. Default scope of <code class="highlighter-rouge">PerLookup</code>. So if you want a singleton, you can:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">bind</span><span class="o">(</span> <span class="n">implementation</span> <span class="o">).</span><span class="na">to</span><span class="o">(</span> <span class="n">contract</span> <span class="o">).</span><span class="na">in</span><span class="o">(</span> <span class="n">Singleton</span><span class="o">.</span><span class="na">class</span> <span class="o">);</span>
+</code></pre>
+</div>
+
+<p>Also, instead of <code class="highlighter-rouge">bind(Class).to(Class)</code>, you can also <code class="highlighter-rouge">bind(Instance).to(Class)</code>, which will be automatically be a singleton.</p>
+
+<p><strong>What if I have a named constant?</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">bind</span><span class="o">(</span><span class="mi">20000</span><span class="o">).</span><span class="na">to</span><span class="o">(</span><span class="n">Integer</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">named</span><span class="o">(</span><span class="s">"MY_INT_CONSTANT"</span><span class="o">);</span>
+</code></pre>
+</div>
+
+<p>and then:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="n">MyClass</span>  <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">maxTimeoutMillis</span><span class="o">;</span>
+
+    <span class="nd">@Inject</span>
+    <span class="kd">public</span> <span class="n">MyClass</span><span class="o">(</span><span class="nd">@Named</span><span class="o">(</span><span class="s">"MY_INT_CONSTANT"</span><span class="o">)</span> <span class="kt">int</span> <span class="n">maxTimeoutMillis</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">maxTimeoutMillis</span> <span class="o">=</span> <span class="n">maxTimeoutMillis</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+
+    </div>
+  </section>
+
+</article>
+
+
+  <section class="next">
+    <a class="next__link" href="/2017/07/07/hk2-servicelocator/" style="background-image: url('https://unsplash.it/2000/1200?image=837');">
+      <div class="next__container">
+        <span>Read Next</span>
+        <h2>HK2 - ServiceLocator</h2>
+      </div>
+    </a>
+  </section>
+
+
+    </main>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/rellax/1.0.0/rellax.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+<script type="text/javascript" src="/assets/js/app.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+
+  </body>
+
+</html>
